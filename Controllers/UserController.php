@@ -4,12 +4,23 @@
 include "Model/user_model.php";
 
 
-class UserController extends UserModel 
+class UserController extends UserModel
 {
+    function __construct()
+    {
+
+        // check du lieu da login hay chua 
+        if (!empty($_SESSION['login_success'])) {
+            echo 'da login roi';
+            exit;
+        }
+    }
+
     public function handle_login()
     {
         // $email_db = 'hoang@gmail.com';
         // $password_db = '123456';
+
 
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'psw');
@@ -26,34 +37,29 @@ class UserController extends UserModel
             $_GET['psw_empty'] = 'password is cant empty';
             $is_Ok = false;
         }
-
+        // var_dump($is_Ok);
+        // exit;
         if ($is_Ok == true) {
+
 
             $usermodel = new UserModel;
 
 
-            $result = $usermodel->getLoginInfo($email_db,$password_db);
-
-
-            var_dump($result);
-            exit;
+            $result = $usermodel->getLoginInfo($email, $password);
 
 
 
-
-            if ($email == $email_db && $password == $password_db) {
-                $_SESSION['login_success']='login ok';
+            if ($result != false) {
+                $_SESSION['login_success'] = 'login ok';
                 echo "login success fully";
                 exit;
             } else {
-                echo "sai roi ku em";   
+                echo "sai roi ku em";
+                include "Views/Users/login.php";
             }
-            
         }
-        
-        }
-        public function handle_banhang(){
-
+    }
+    public function handle_banhang()
+    {
     }
 }
-

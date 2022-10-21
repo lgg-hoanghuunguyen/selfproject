@@ -4,21 +4,31 @@ include 'connect_db.php';
 
 class UserModel extends ConnectDB
 {
-    public function getLoginInfo($email_db,$password_db)
+    public function getLoginInfo($email,$password)
     {
-        $stmt = $this->conn->prepare('SELECT * FROM users where email = $email_db AND password = $password_db');
+        $md5Password = md5($password);
+
+        $stmt = $this->conn->prepare("SELECT * FROM users where email = '$email' AND password = '$md5Password'");
     
 
         $stmt->execute();
 
         // set the resulting array to associative
+        //lay data theo che do gi 
+
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
+
+        //lay du lieu tu $stmt
         $result = $stmt->fetch();
 
-        // dump_data_exit($result);
+        //  var_dump($result);
+        //  echo '123';
+        //  exit;
+         
 
         return $result;
+
        
     }
 }
